@@ -1,2 +1,2 @@
 # articles
-articles written
+only the finest scholarly articles
