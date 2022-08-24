@@ -1,4 +1,4 @@
-## 5 NFT Smart Contract Design Fails
+## 4 Common NFT Contract Design Anti-Patterns
 
 The NFT boom has happened, and is still happening (as of this writing in July of 2022). Etherscan has a handy search utility which, along with its handy verification and decompiling features, lets you peek at the code of many ERC721 to compare. Along with many well-designed contracts, we can also see many make the same mistakes over and over. In this article I will give my opinions on what I think are 5 of the most common "design fails" for NFTs, that I commonly notice when viewing NFT contracts on etherscan.
 
@@ -29,16 +29,25 @@ While saving on gas costs might be the best and most understandable reason to cr
 
 A token contract needs some sort of access control, because there are functions (like minting or doing anything to the supply parameters) which should be available only to permissioned addresses. The simplest way to accomplish this is to use an Ownable model (usually using OpenZeppelin’s Ownable contract because why reinvent the wheel for such a basic need). But I would strongly suggest using a role-based access control instead, for the following reasons. The motivation behind using Ownable (or something similar) is probably simplicity (and saving on gas costs), which is fine on the surface. You may also “know” that you (or your client) will “always” be the only one managing the contract. Future-proofing is preferable, when the cost is low; and the complexity of role-based security (e.g. OpenZeppelin’s IAccessControl) is honestly just a slight bit more complex (and expensive) when compared the Ownable model. If gas costs are still an issue, you can always prune the role-based security code (be it OpenZeppelin, or your own) to just only what you need. But the more important reason to use role-based is that it enables you to decouple functionality (as in the previous point, sale and pricing information) from the ERC721 contract itself. It allows you to designate a separate contract as the minter by assigning it the “minter” role, without allowing it full admin permissions. Whereas the admin (or admins, who are probably humans and not contracts) still have higher-level permissions (such as removing and adding permissions). When the minter (for example) no longer meets your needs, one simply retires it by revoking its minting rights, and assigning minting rights to a new contract implementing a new minting strategy; it’s modular, convenient, and secure. Other activities besides minting can be handled in the same way, based on the projects particular use cases.
 
+![](image4.png)
+*OZ’s AccessControl.sol implements role-based security*
 
+![](image5.png)
+*Actions can be restricted to roles*
 
-Fail #3: Don't Implement ERC-165 (Introspection) Properly
-Many tokens (or contracts in general) either don't implement ERC-165, or don't implement it optimally. ERC-165, in my view, is about interoperability. It makes your contract future-compatible, and exchanges may call it to find out (for example) about the royalty structure of your NFT. I see this often not implemented at all, or implemented sub-optimally. 
-Here's a rule of thumb to implement it correctly:
-any parent classes that implement ERC-165 should be in the override list. Then, they will be invoked when you call super.supportsInterface, automatically.
-any other implemented interfaces that are not represented in parent classes, can be added with an or clause, like this: 
+### Anti-Pattern #3: Don’t Implement ERC-165 (Introspection) Properly
 
-|| type(ISomeInterface).interfaceId == _interfaceId
-example:
+Many tokens (or contracts in general) either don’t implement ERC-165, or don’t implement it optimally. ERC-165, in my view, is about interoperability. It makes your contract future-compatible, and exchanges may call it to find out (for example) about the royalty structure of your NFT. I see this often not implemented at all, or implemented sub-optimally.
+
+Here’s a rule of thumb to implement it correctly:
+
+* any parent classes that implement ERC-165 should be in the override list. Then, they will be invoked when you call super.supportsInterface, automatically.
+* any other implemented interfaces that are not represented in parent classes, can be added with an or clause, like this:
+
+`|| type(ISomeInterface).interfaceId == _interfaceId`
+
+_example:_
+```
 function supportsInterface(bytes4 _interfaceId)
         public
         view
@@ -48,8 +57,10 @@ function supportsInterface(bytes4 _interfaceId)
         return super.supportsInterface(_interfaceId) || 
           _interfaceId == type(IERC2981).interfaceId; 
     }
+ ```
 
 If your code has no parent classes that implement ERC-165, then only the second type should be represented, such as
+```
 function supportsInterface(bytes4 _interfaceId)
         public
         view
@@ -60,8 +71,10 @@ function supportsInterface(bytes4 _interfaceId)
             _interfaceId == type(IERC2981).interfaceId ||
             _interfaceId == type(IAccessControl).interfaceId; 
     }
+```
 
 If your code implements no other interfaces other than the ones handled by the parent classes' implementations of ERC-165, then the second type is not needed. Such as:
+```
 function supportsInterface(bytes4 _interfaceId)
         public
         view
@@ -70,6 +83,7 @@ function supportsInterface(bytes4 _interfaceId)
     {
         return super.supportsInterface(_interfaceId);
     }
+```
 
 Implementing ERC-165 correctly is optional, but important. You want your tokens to be compatible with as many other systems (such as exchanges) as possible, including future ones that haven't been implemented yet. The ERC-165 standard will likely become more used and important as time goes by and the space matures.
 Fail #4: Don't Test Thoroughly Before Deploying
