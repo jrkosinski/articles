@@ -86,19 +86,25 @@ function supportsInterface(bytes4 _interfaceId)
 ```
 
 Implementing ERC-165 correctly is optional, but important. You want your tokens to be compatible with as many other systems (such as exchanges) as possible, including future ones that haven't been implemented yet. The ERC-165 standard will likely become more used and important as time goes by and the space matures.
-Fail #4: Don't Test Thoroughly Before Deploying
-Your ERC721 token may be very standard, and may use all third party parent classes and libraries with very little customization, and you may know that that third party code is famously well-tested and secure. But you still need to thoroughly test your code, because you only get one chance to get it right before it's deployed to the mainnet, bringing you either glory or shame forever. 
-First, of course, unit testing. What testing framework you use is not important, in my opinion; I use hardhat with ethers and mocha. To me the only important part is that the test coverage and the coverage of happy-path cases, exceptional cases, and edge cases is wide and deep. Even though you may be testing code (e.g. OpenZeppelin) that is already famously well-tested, (a) your custom code may have broken some of those cases, so they should be retested, and (b) OpenZeppelin has had bugs before, and they may again in the future. To save you some time, you may have a standard suite of tests for all ERC721 tokens, all ERC20 tokens, all ERC1155 tokens, etc. that you may reuse from project to project. This is good. Then you can add cases for each project to cover any customizations to the standard; this will save time. Unit tests should cover access control, basic functionality (like minting and transferring), pausability (if your contract is pausable), implementation of ERC165 standard, and more. You can test your coverage using solidity-coverage (a nodejs package). 
-Secondly, manual testing is essential. Go over your code, looking for faults - or even better, have someone else do it. Look for a list of known and common faults - to keep this article from going too long I won't provide that list here. The lists are easy to find, and usually begin with "Reentrancy", and include things like unsafe calls to contracts, use of delegatecall, bad access control (which should have been picked up by unit tests), naming conventions, comments, and more. 
-Finally, automated tools can give you a huge amount of help in testing. Slither, Manticore, and Mythril are industry standards, typically used by the major names in security auditing like Consensys and Certik. Solidity-coverage (a nodejs package) will tell you the estimated percentages of coverage your unit tests are providing (very handy as a rule of thumb). Solgraph is a tool that can help you see relationships and connections in contract code; useful in test planning. Echidna is useful too; it's a fuzzing test tool. Personally I use a test-first methodology where applicable. This ensures good test coverage, and the test suite becomes similar to a project spec. I love me some good test coverage.
+
+### Anti-Pattern #4: Don’t Test Thoroughly Before Deploying
+
+Your ERC721 token may be very standard, and may use all third party parent classes and libraries with very little customization, and you may know that that third party code is famously well-tested and secure. But you still need to thoroughly test your code, because you only get one chance to get it right before it’s deployed to the mainnet, bringing you either glory or shame forever.
+
+First, of course, *unit testing*. What testing framework you use is not important, in my opinion; I use hardhat with ethers and mocha. To me the only important part is that the test coverage and the coverage of happy-path cases, exceptional cases, and edge cases is wide and deep. Even though you may be testing code (e.g. OpenZeppelin) that is already famously well-tested, (a) your custom code may have broken some of those cases, so they should be retested, and (b) OpenZeppelin has had bugs before, and they may again in the future. To save you some time, you may have a standard suite of tests for all ERC721 tokens, all ERC20 tokens, all ERC1155 tokens, etc. that you may reuse from project to project. This is good. Then you can add cases for each project to cover any customizations to the standard; this will save time. Unit tests should cover access control, basic functionality (like minting and transferring), pausability (if your contract is pausable), implementation of ERC165 standard, and more. You can test your coverage using solidity-coverage (a nodejs package).
+
+Finally, *automated tools* can give you a huge amount of help in testing. Slither, Manticore, and Mythril are industry standards, typically used by the major names in security auditing like Consensys and Certik. Solidity-coverage (a nodejs package) will tell you the estimated percentages of coverage your unit tests are providing (very handy as a rule of thumb). Solgraph is a tool that can help you see relationships and connections in contract code; useful in test planning. Echidna is useful too; it’s a fuzzing test tool. Personally I use a test-first methodology where applicable. This ensures good test coverage, and the test suite becomes similar to a project spec. I love me some good test coverage.
+
+```
 > pip3 install slither-analyzer
 > pip3 install mythril 
 > npm install solidity-coverage
-So, to summarize:
-thorough, deep unit testing getting as many happy-path cases, exceptional cases, and edge cases as possible
-manual testing and examination
-use of automated tools like slither, manticore, mythril, echidna, and solidity-coverage
+```
 
-Fail #5: Don't Verify Your Contract on Etherscan
-Verification of contract code on etherscan is a great feature. Seeing the green check mark on the Contract tab, and being able to see the code itself, with the "exact  match" tag, emanates trust and accountability. When someone is viewing your contract for the first time, trying to assess the relative risks of usage or investment, this can only help. And this is in general, for all contracts of all types, not just NFTs.
-Contract verified on etherscanSo, when creating your NFT, keep the above in mind; your contract will be on the blockchain for as long as the blockchain exists, so make it gud. Happy coding.
+*So, to summarize:*
+* thorough, deep unit testing getting as many happy-path cases, exceptional cases, and edge cases as possible
+* manual testing and examination
+* use of automated tools like slither, manticore, mythril, echidna, and solidity-coverage
+
+### Tip: Do Verify Your Contract on Etherscan
+Verification of contract code on etherscan is a great feature. Seeing the green check mark on the Contract tab, and being able to see the code itself, with the "exact match" tag, emanates trust and accountability. When someone is viewing your contract for the first time, trying to assess the relative risks of usage or investment, this can only help. And this is in general, for all contracts of all types, not just NFTs.
