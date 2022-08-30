@@ -1,6 +1,12 @@
+# The Case Against Upgradeable Smart Contracts 
+
+### Introduction 
+
 You are about to sign a lease to rent a house or aparment. The landlord: "This is just a standard rental agreement. We literally just googled one and copied it. _Except for the last clause which I added myself_, it's all just standard boilerplate". You take the time anyway, to read the contract carefully and thoroughly. Sure enough, it's all very standard and unsurprising. Pets are allowed, which is great because you can't part with your cat. Then you read the very last line: "All contents of this contract may be amended or changed completely by the property owner at any time, for any reason, without prior notification or consent of the renter." Well... this does not seem right. You read it again. You ask "So does this mean that you can, if you want, change the entire contract to read 'If any scratch on any furniture or paint is found, regardless of whether or not it was there originally, the renter owes the owner 10 times the market value of the property'?" The landlord replies: "Yes, well technically yeah I guess I could, yeah. But I wouldn't do that!" 
 
 Let's talk about upgradeable smart contracts in EVM-compatible blockchains. 
+
+### The Problem 
 
 One of the most striking features of smart contract development is the inability to change anything once the contract is deployed. Consider a deployed web application: a bug discovered after deployment can be embarrassing, or harmful, but it can be fixed immediately before any further harm is done. In a deployed desktop or mobile app, it's a bit worse: users may have to intentionally download and install a new fixed version. But a smart contract is on the blockchain forever, immutable. This is a feature; users can trust the immutability of the contract. If they've assessed the contract's usage and safety, and they feel comfortable with it, they can trust that it will always be that way. 
 
@@ -11,6 +17,9 @@ Then came upgradeability, which takes it a step further.
 Some technical explanation on upgradeability: there is more than one way to make a contract upgradeable. There are many design patterns, with different features, advantages, and disadvantages. The most popular one seems to be the UUPS - the Universal Upgradeable Proxy Standard. Like many upgradeability patterns, it makes clever use of two features of the EVM bytecode specification: fallback functions (a function that executes on a contract when the specified function selector could not be found) and DELEGATECALL (an arguably dangerous instruction that calls a function of another smart contract, while giving the called contract full access to the calling contract's stored data). In this pattern, the contract with which clients interact is just a proxy, while the real contract that defines the logic used behind the scenes can be switched out at any time for a different contract with different logic. That's analogous to the rental agreement changing completely without the renter's knowledge or consent. When the contract is upgraded, the client is still interacting with the same contract (the proxy) address; they make no conscious choice to switch to the new contract. 
 
 Standard practice for security is to thouroughly audit a smart contract before beginning to use it. This is good practice, and reasonable. This is analogous to fully reading a legal contract from top to bottom before signing it. If a new version of the contract was published (at a new address), one would reasonably repeat that process for the new contract before consciously and intentionally switching to it. However, to guard against the shenanigans described previously, one would have to repeat that process _before each call_ to the contract, and one would not be advised to _store_ tokens or currency in it for any period of time. A big difference.
+
+
+### An Appropriate Use Case 
 
 The upgradeable patterns have great benefits to the developers and maintainers of smart contracts. I mean, what a relief! We've tested thoroughly, checked and re-checked everything, but we can rest easy knowing that if something _does_ go wrong, we have an out. But for the users of smart contracts? Not so much. I personally would trust such a contract only under one or more of the following circumstances: 
 
