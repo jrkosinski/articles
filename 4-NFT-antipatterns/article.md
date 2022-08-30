@@ -14,25 +14,25 @@ This is extremely common, but when I see this, it flags the contract, to my eyes
 
 But this is not really a good idea. The contract itself should be the immutable center of a network of logic, but should never dirty its own hands by handling money directly. This includes selling, sale times, whitelisting, etc., directly in the same contract code as the ERC721 implementation. The sale logic and the core logic are tightly coupled.
 
-![](image1.png)
+![](images/image1.png)
 *typical of many NFT contracts on etherscan, this one handles sales in the ERC721*
 
 While saving on gas costs might be the best and most understandable reason to cram all logic into one contract, I think that, all things considered, there are much better reasons to not implement this design shortcut. Your core contract logic should be the only thing set in stone, and in most cases will implement the standard in a very, well… standard manner. Many clones are (or could be) nearly clones of one another. Your minting strategy, pricing (if you’re selling mints) — these kinds of things should be decoupled. This allows your contract to be flexible in a way that doesn’t harm user trust. Decoupled design and single-responsibility principle. Side note: I think it does make sense to restrict the supply (i.e. maxSupply) in the ERC721 contract itself, as long as it can be modified by someone with an admin role.
 
-![](image2.png)
+![](images/image2.png)
 *NFTStore is granted the MINTER role of its associated contract, so it has the responsibility of minting the NFT*
 
-![](image3.png)
+![](images/image3.png)
 *An example of a contract being deployed in web3 code, with the “store” contract being deployed alongside it. Note that the “store” contract is assigned the minter role.*
 
 ### Anti-Pattern #2: Don’t Implement Role-Based Security
 
 A token contract needs some sort of access control, because there are functions (like minting or doing anything to the supply parameters) which should be available only to permissioned addresses. The simplest way to accomplish this is to use an Ownable model (usually using OpenZeppelin’s Ownable contract because why reinvent the wheel for such a basic need). But I would strongly suggest using a role-based access control instead, for the following reasons. The motivation behind using Ownable (or something similar) is probably simplicity (and saving on gas costs), which is fine on the surface. You may also “know” that you (or your client) will “always” be the only one managing the contract. Future-proofing is preferable, when the cost is low; and the complexity of role-based security (e.g. OpenZeppelin’s IAccessControl) is honestly just a slight bit more complex (and expensive) when compared the Ownable model. If gas costs are still an issue, you can always prune the role-based security code (be it OpenZeppelin, or your own) to just only what you need. But the more important reason to use role-based is that it enables you to decouple functionality (as in the previous point, sale and pricing information) from the ERC721 contract itself. It allows you to designate a separate contract as the minter by assigning it the “minter” role, without allowing it full admin permissions. Whereas the admin (or admins, who are probably humans and not contracts) still have higher-level permissions (such as removing and adding permissions). When the minter (for example) no longer meets your needs, one simply retires it by revoking its minting rights, and assigning minting rights to a new contract implementing a new minting strategy; it’s modular, convenient, and secure. Other activities besides minting can be handled in the same way, based on the projects particular use cases.
 
-![](image4.png)
+![](images/image4.png)
 *OZ’s AccessControl.sol implements role-based security*
 
-![](image5.png)
+![](images/image5.png)
 *Actions can be restricted to roles*
 
 ### Anti-Pattern #3: Don’t Implement ERC-165 (Introspection) Properly
