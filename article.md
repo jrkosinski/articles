@@ -1,6 +1,6 @@
 ## 4 Common NFT Contract Design Anti-Patterns
 
-The NFT boom has happened, and is still happening (as of this writing in July of 2022). Etherscan has a handy search utility which, along with its handy verification and decompiling features, lets you peek at the code of many ERC721 to compare. Along with many well-designed contracts, we can also see many make the same mistakes over and over. In this article I will give my opinions on what I think are 5 of the most common "design fails" for NFTs, that I commonly notice when viewing NFT contracts on etherscan.
+The NFT boom has happened, and is still happening (as of this writing in July of 2022). Etherscan has a handy search utility which, along with its handy verification and decompiling features, lets you peek at the code of many ERC721 to compare. Along with many well-designed contracts, we can also see many make the same mistakes over and over. In this article I will give my opinions on what I think are 4 of the most common "design fails" for NFTs, that I commonly notice when viewing NFT contracts on etherscan.
 
 Note that this article was written mainly with EVM-compatible blockchains in mind, but many of the points are applicable or have some analogy or equivalent on other networks as well.
 
