@@ -112,7 +112,7 @@ contract Contract is AccessControl {
 - implement a SecurityManager contract
 - modify the Contract to use a reference to SecurityManager instead of inheriting AccessControl
 
-Here, a SecurityManager contract is created (which controls access via OpenZeppelin's AccessControl), and Contract is changed so that it refers to an instance of the SecurityManager. See that SecurityManage provides the necessary access to the underlying security protocols, by allowing callers to query, revoke, renounce, and grant roles. 
+Here, a SecurityManager contract is created (which controls access via OpenZeppelin's AccessControl), and Contract is changed so that it refers to an instance of the SecurityManager. See that SecurityManager provides the necessary access to the underlying security protocols, by allowing callers to query, revoke, renounce, and grant roles. 
 
 ```
 // SPDX-License-Identifier: MIT
@@ -406,6 +406,7 @@ Some notes about the above example:
 * It's highly simplified for clarity
 * The examples use OpenZeppelin's AccessControl for role-based security. In reality, the technique is not specific to either OpenZeppelin or role-based security. Almost any security implementation should be usable. 
 * I mentioned earlier that one of the side benefits is that it reduces the use of inheritance. Actually, inheritance is still used for SecurityManager, but that's (a) optional, and (b) only single inheritance. Inheritance is also used for SecuredContract -> Contract1 and Contract2, but that's optional; there are other ways to reduce code reuse (like libraries and such). 
+* Changes to security roles (e.g. granting roles, revoking roles) is all done directly on the SecurityManager. That's why ISecurityManager doesn't implement those methods (it only implements the methods needed by client contracts). 
 
 
 ## Conclusion 
