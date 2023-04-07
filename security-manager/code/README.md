@@ -3,41 +3,40 @@
 Thought of the day: Lots of people have ideas; the real skill is in turning those ideas into reality. 
 -----------------------------------------------------------------------------------------------------------------------------------
 
-Design patterns in software have been around a long time. Many have not changed much over the years (see Gang of Four) because they're based on fundamental building blocks of logic, and they're useful for most types of logical machines. When it comes to blockchain, some common long-held standards of development are infeasible or inadvisable (take the humble looping construct as a simple example). Some standard OOP design patterns are perfectly good and advisable in blockchain (smart contract) architecture, others usable with some modification; still others not at all. 
+Design patterns in software have been around a long time. Many have not changed much over the years (see Gang of Four) because they're based on fundamental building blocks of logic itself, and they're useful for most types of logical machines. When it comes to blockchain, some common long-held standards of development are infeasible or inadvisable (take the humble looping construct as a simple example). Some standard OOP design patterns are perfectly good and advisable in blockchain (smart contract) architecture, others usable with some modification; still others not at all. 
 
-Design patterns are just that - patterns of behavior in development that we may find in our own code, in the wild, or that we may dream up to solve a problem. Today I'd like to document a common pattern that I and other seem to keep coming back to, because it solves a particular problem elegantly. 
+Design patterns are just that - patterns of behavior in development that we may find in our own code, in the wild, or that we may dream up to solve a particular problem. Today I'd like to document a common pattern that I find myself using (and I'm sure that many others do too), because it solves a particular problem elegantly. 
 
-This pattern relates to contract security. It's not specific to blockchain, but it is particularly applicable in smart contract development, and I'll explain why. It's not complicated, and it probably exists under many names, but I'm going to call it the Security Manager pattern. This pattern and the accompanying examples focus on Solidity development for any EVM compatible chain, but it can be applied (with applicable modifications) to other blockchain architectures as well. The examples and discourse focus on role-based security (because it's the most common use case), but one should be able to easily apply it just as well to other security models (e.g. governance-based security) 
+This pattern relates to contract security. It's not specific to blockchain, but it is particularly applicable in smart contract development, and I think the reasons for this will be evident. It's not complicated, and it probably exists under many names, but I'm going to call it the Security Manager pattern. This pattern and the accompanying examples focus on Solidity development for any EVM compatible chain, but it can be applied (with applicable modifications) to other blockchain architectures as well. The examples and discourse focus on role-based security (because it's the most common use case), but one should be able to easily apply it just as well to other security models.
 
-This is the first in a planned multi-part series on Security Issues in Blockchain Development. 
+This is the first in a planned multi-part series in which I'll write about security topics in blockchain development from a few different angles.
 
 ## Situation: 
 - For most non-trivial use cases, your DApp consists of not just one contract, but a happy family of smart contracts. Some (maybe most, maybe all) expose protected methods that should only be called from permissioned accounts. 
-- For this situation, we're going to say that the various use cases converge on the best security model being role-based security. The pattern can be applied just as well to other security models.
+- For this situation, we're going to assume that the various use cases converge on the best security model being role-based security. The pattern can be applied just as well to other security models.
 
 ## Naive Implementation: 
-- Every contract in the family that requires some security will inherit individually from OpenZeppelin's AccessControl //TODO: link required 
+- Every contract in the family that requires some security will inherit individually from OpenZeppelin's [AccessControl](https://docs.openzeppelin.com/contracts/2.x/access-control)
 
 While this will solve the basic need of having security restrictions present on the contracts that need them, it comes with some drawbacks: 
 
 ## Problems with the Naive Implementation: 
-- Code bloat
-If you're not as familiar with on-chain development, know that you'll be baking the AccessControl class into each one of your deployed contracts; the code will be reused only in a logical sense, but not in an actual physical sense. You will multiply the amount of code to be deployed for each contract that inherits from AccessControl; the code is not truly shared in that sense. And that implies... 
+*Code bloat*. If you're not as familiar with on-chain development, know that you'll be baking the AccessControl class into each one of your deployed contracts; the code will be reused only in a logical sense, but not in an actual physical sense. You will multiply the amount of code to be deployed for each contract that inherits from AccessControl; the code is not truly shared in that sense. And that implies... 
 
-- Deployment costs 
+*Deployment costs*.
 Deployment costs can be non-trivial, especially if you'll be deploying the same family of contracts more than once (on different chains for example, or as different instances on the same chain). The increased amount of code can significantly increase deployment costs. 
 
-- Operating costs 
+*Operating costs*.
 This refers to gas costs for making security-related changes on the contracts. Scenario: you want to add three members to the ADMIN role. You have six contracts that implement role-based security, and these three new members should have admin rights on each of the six contracts. That's 18 network calls you have to make, when it should be just three (or even just one, if you want to allow multiple assignments per call). 
 
-- Potential for mistakes 
+*Potential for mistakes*.
 When you are adding or removing roles, and you have to perform the same operations on multiple contracts, the potential for mistakes is higher. This can mean _not_ removing a security risk address from one of several contracts, even though that was the intention. 
 
-- Same security roles defined multiple times 
+*Same security roles defined multiple times*. 
 A small inconvenience, but if several of your contracts recognize the same security roles, you'll have to redefined each of those roles on each of the contracts that need them; it's inconvenient and also increases the chance of mistakes/bugs.
 
-- Violates the R in DRY
-Violates the R in the DRY principle, as you'll end up implementing similar or identical code to manage security on each of the contracts that need it. 
+*Violates the R in DRY*. 
+Makes you repeat yourself, as you'll end up implementing similar or identical code to manage security on each of the contracts that need it. 
 
 
 ## How the Pattern Solves the Problems: 
