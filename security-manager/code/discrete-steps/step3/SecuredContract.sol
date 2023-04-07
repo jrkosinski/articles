@@ -8,7 +8,7 @@ contract SecuredContract {
     
     //roles 
     bytes32 public constant MANAGER_ROLE = keccak256("MANAGER_ROLE");
-    bytes32 public constant ADMIN_ROLE = keccak256("ADMIN_ROLE");
+    bytes32 public constant ADMIN_ROLE = bytes32(0);
     
     //the security manager instance 
     SecurityManager public securityManager;

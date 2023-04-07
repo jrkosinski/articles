@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.7;
 
-import "../inc/AccessControl.sol";
+import "@openzeppelin/contracts/access/AccessControl.sol";
 
 contract Contract1 is AccessControl {
     uint256 public publicValue = 0;
@@ -16,7 +16,7 @@ contract Contract1 is AccessControl {
         publicValue = value;
     }
     
-    function setRestrictedValue1(uint256 value) external onlyRole(keccak256("ADMIN_ROLE")) {
+    function setRestrictedValue1(uint256 value) external onlyRole(bytes32(0)) {
         //implementation
         restrictedValue1 = value;
     }

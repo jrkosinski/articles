@@ -20,7 +20,7 @@ contract Contract1 {
     
     function setRestrictedValue1(uint256 value) external { // this method is for ADMIN role only 
         require (
-            securityManager.hasRole(keccak256("ADMIN_ROLE"), msg.sender), 
+            securityManager.hasRole(bytes32(0), msg.sender), 
             "Caller not authorized"
         );
         

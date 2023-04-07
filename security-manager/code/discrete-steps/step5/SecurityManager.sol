@@ -1,11 +1,12 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.7;
 
-import "../inc/AccessControl.sol";
+import "@openzeppelin/contracts/access/AccessControl.sol";
 import "./ISecurityManager.sol";
 
 contract SecurityManager is AccessControl, ISecurityManager { 
     bytes32 public constant MANAGER_ROLE = keccak256("MANAGER_ROLE");
+    bytes32 public constant ADMIN_ROLE = bytes32(0);
     
     constructor(address admin) {
         _grantRole(ADMIN_ROLE, admin);

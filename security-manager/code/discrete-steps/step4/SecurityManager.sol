@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.7;
 
-import "../inc/AccessControl.sol";
+import "@openzeppelin/contracts/access/AccessControl.sol";
 import "./ISecurityManager.sol";
 
 //now implements ISecurityManager

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.7;
 
-import "./inc/Context.sol"; 
+import "@openzeppelin/contracts/access/AccessControl.sol";
 import "./ISecurityManager.sol"; 
 
 /**
@@ -20,7 +20,7 @@ abstract contract SecuredContract is Context {
     ISecurityManager public securityManager; 
     
     //security roles 
-    bytes32 public constant ADMIN_ROLE = keccak256("ADMIN_ROLE");
+    bytes32 public constant ADMIN_ROLE = bytes32(0);
     bytes32 public constant MANAGER_ROLE = keccak256("MANAGER_ROLE");
     
     //thrown when the onlyRole modifier reverts 
