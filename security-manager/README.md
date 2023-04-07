@@ -1,6 +1,8 @@
 # Security Manager Design Pattern in Solidity 
 
-![unessential](unessential.png)
+<p align="center">
+  <img src="unessential.png" />
+</p>
 
 Design patterns in software have been around a long time. Many have not changed much over the years (see Gang of Four) because they're based on fundamental building blocks of logic itself, and they're useful for most types of logical machines. When it comes to blockchain, some common long-held standards of development are infeasible or inadvisable (take the humble looping construct as a simple example). Some standard OOP design patterns are perfectly good and advisable in blockchain (smart contract) architecture, others usable with some modification; still others not at all. 
 
