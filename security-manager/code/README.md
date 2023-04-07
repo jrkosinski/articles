@@ -59,7 +59,12 @@ Violates the R in the DRY principle, as you'll end up implementing similar or id
 
 
 ## Security Manager Implementation: 
+
 ### Step 0: Naive Implementation
+
+[view code on github](https://github.com/jrkosinski/articles/blob/main/security-manager/code/discrete-steps/step0/Contract1.sol)
+
+This exemplifies the naive implementation described above, wherein each contract individually handles its own security.
 
 ```
 // SPDX-License-Identifier: MIT
@@ -96,6 +101,11 @@ contract Contract is AccessControl {
 ```
 
 ### Step 1: Add Security Manager
+
+[view code on github](https://github.com/jrkosinski/articles/tree/main/security-manager/code/discrete-steps/step1)
+
+Here, a SecurityManager contract is created (which controls access via OpenZeppelin's AccessControl), and Contract is changed so that it refers to an instance of the SecurityManager. See that SecurityManage provides the necessary access to the underlying security protocols, by allowing callers to query, revoke, renounce, and grant roles. 
+
 ```
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.7;
@@ -124,7 +134,8 @@ contract SecurityManager is AccessControl {
 }
 ```
 
-### Step 2: Connect Contract to Security Manager
+The Contract will now be changed so that it holds a reference to SecurityManager. Note that Contract no longer inherits from AccessControl. 
+
 ```
 contract Contract {
     //the security manager 
@@ -168,9 +179,12 @@ contract Contract {
 }
 ```
 
-### Step 3: Split Contract into Two Contracts
+### Step 2: Split Contract into Two Contracts
 
-This will showcase how code reuse comes into play; with a single contract this isn't evident. Imagine a production scenario which might contain a handful or even dozens of contracts. 
+[view code on github](https://github.com/jrkosinski/articles/tree/main/security-manager/code/discrete-steps/step2)
+
+In a real use case, using this pattern with only one single contract is not really providing any benefit. The pattern is for cases in which security must be controlled for multiple contracts. Imagine a production scenario which might contain a handful or even dozens of contracts. This example, for simplicity, will just show two. 
+
 ```
 contract Contract1 {
     SecurityManager public securityManager;
@@ -225,7 +239,12 @@ contract Contract2 {
 }
 ```
 
-### Step 4: Simplify by Eliminating Redundancy
+### Step 3: Simplify by Eliminating Redundancy
+
+[view code on github](https://github.com/jrkosinski/articles/tree/main/security-manager/code/discrete-steps/step3)
+
+Now that we have two contracts, we see that there is some redundant code. For one thing, that 'require' in each of the restricted could be replaced by a more readable modifier. One way to do this is by creating a common class to hold the common code and making Contract1 and Contract2 subclasses. You can also use a library module or some other method if you prefer; the point here is just to tidy up and avoid repeating ourselves in code.
+
 ```
 // this class is new; it generalizes the role of a "secured" contract (one which uses the SecurityManager)
 contract SecuredContract {
@@ -293,7 +312,14 @@ contract Contract2 is SecuredContract {
 }
 ```
 
-### Step 5: Hide SecurityManager Behind Interface
+### Step 4: Finishing Touch: Hide SecurityManager Behind Interface
+
+[view code on github](https://github.com/jrkosinski/articles/tree/main/security-manager/code/discrete-steps/step4)
+
+We will create an interface called ISecurityManager, and make SeceurityManager implement it. 
+
+Aside from the usual benefits of hiding implementations behind interfaces, there is a real practical reason for this as well; and to achieve the benefit you'll need to store ISecurityManager and SecurityManager in different .sol files. When you deploy new contracts that reference an existing on-chain SecurityManager, you won't need to deploy all of the SecurityManager contract's code with it; just only the interface. Not only is it unnecessary to re-deploy the SecurityManager implementation, doing so can significantly add to your deployment costs!  
+
 ```
 // this generalizes the interface of SecurityManager and hides its implementation
 interface ISecurityManager {
@@ -305,7 +331,7 @@ contract SecurityManager is AccessControl, ISecurityManager {
     .... 
 ```
 
-Now everywhere that formerly referred to SecurityManager, can refer instead to ISecurityManager. The purpose of this is to reduce code bloat at deployment of new contracts. If one was to deploy a new contract that uses an already-existing Security Manager, there's no need to deploy all of the Security Manager's code; a simplified interface will suffice. Even though in our example the saving is not huge, in an actual use case the Security Manager may be larger. In any case, it's a net benefit. 
+Now everywhere that formerly referred to SecurityManager, can refer instead to ISecurityManager. The purpose of this is to reduce code bloat at deployment of new contracts. 
 
 ```
 contract Contract1 is SecuredContract {
@@ -317,7 +343,13 @@ contract Contract1 is SecuredContract {
     .... 
 ```
     
-### Step 6: Finishing Touches
+### Step 6: Finishing Touch: Prevent Accidental Stranding
+
+[view code on github](https://github.com/jrkosinski/articles/tree/main/security-manager/code/discrete-steps/step5)
+
+When using role-based security, typically there is one role that's allowed to grant roles to accounts. If a contract was left without any users holding that one role (for example, if the one single admin accidentally revoked his own admin role), there could be no way for anyone to regain that role, short of redeploying the entire set of contracts. 
+
+For this, I just (my own best practice here) like to add some protection against that. If the caller is ADMIN, in this case, the caller is not allowed to either renounce or revoke his _own_ admin role. Note that he can renounce the admin roles of other admins, just not his own. This makes it much less likely to encounter a death stranding situation. 
 
 In SecurityManager.sol: 
 ```
