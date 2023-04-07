@@ -21,21 +21,21 @@ This is the first in a planned multi-part series in which I'll write about secur
 While this will solve the basic need of having security restrictions present on the contracts that need them, it comes with some drawbacks: 
 
 ## Problems with the Naive Implementation: 
-*Code bloat*. If you're not as familiar with on-chain development, know that you'll be baking the AccessControl class into each one of your deployed contracts; the code will be reused only in a logical sense, but not in an actual physical sense. You will multiply the amount of code to be deployed for each contract that inherits from AccessControl; the code is not truly shared in that sense. And that implies... 
+**Code bloat**. If you're not as familiar with on-chain development, know that you'll be baking the AccessControl class into each one of your deployed contracts; the code will be reused only in a logical sense, but not in an actual physical sense. You will multiply the amount of code to be deployed for each contract that inherits from AccessControl; the code is not truly shared in that sense. And that implies... 
 
-*Deployment costs*.
+**Deployment costs**.
 Deployment costs can be non-trivial, especially if you'll be deploying the same family of contracts more than once (on different chains for example, or as different instances on the same chain). The increased amount of code can significantly increase deployment costs. 
 
-*Operating costs*.
+**Operating costs**.
 This refers to gas costs for making security-related changes on the contracts. Scenario: you want to add three members to the ADMIN role. You have six contracts that implement role-based security, and these three new members should have admin rights on each of the six contracts. That's 18 network calls you have to make, when it should be just three (or even just one, if you want to allow multiple assignments per call). 
 
-*Potential for mistakes*.
+**Potential for mistakes**.
 When you are adding or removing roles, and you have to perform the same operations on multiple contracts, the potential for mistakes is higher. This can mean _not_ removing a security risk address from one of several contracts, even though that was the intention. 
 
-*Same security roles defined multiple times*. 
+**Same security roles defined multiple times**. 
 A small inconvenience, but if several of your contracts recognize the same security roles, you'll have to redefined each of those roles on each of the contracts that need them; it's inconvenient and also increases the chance of mistakes/bugs.
 
-*Violates the R in DRY*. 
+**Violates the R in DRY**. 
 Makes you repeat yourself, as you'll end up implementing similar or identical code to manage security on each of the contracts that need it. 
 
 
