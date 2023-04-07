@@ -1,7 +1,6 @@
 # Security Manager Design Pattern in Solidity 
 
-Thought of the day: Lots of people have ideas; the real skill is in turning those ideas into reality. 
------------------------------------------------------------------------------------------------------------------------------------
+
 
 Design patterns in software have been around a long time. Many have not changed much over the years (see Gang of Four) because they're based on fundamental building blocks of logic itself, and they're useful for most types of logical machines. When it comes to blockchain, some common long-held standards of development are infeasible or inadvisable (take the humble looping construct as a simple example). Some standard OOP design patterns are perfectly good and advisable in blockchain (smart contract) architecture, others usable with some modification; still others not at all. 
 
@@ -256,7 +255,7 @@ contract Contract2 {
 
 - implement SecuredContract class
 - modify Contract1 and Contract2 to inherit SecuredContract
-- replace 'require' with a modifier 
+- replace 'require' call with a modifier 
 
 Now that we have two contracts, we see that there is some redundant code. For one thing, that 'require' in each of the restricted could be replaced by a more readable modifier. One way to do this is by creating a common class to hold the common code and making Contract1 and Contract2 subclasses. You can also use a library module or some other method if you prefer; the point here is just to tidy up and avoid repeating ourselves in code.
 
@@ -337,7 +336,7 @@ contract Contract2 is SecuredContract {
 
 We will create an interface called ISecurityManager, and make SeceurityManager implement it. 
 
-Aside from the usual benefits of hiding implementations behind interfaces, there is a real practical reason for this as well; and to achieve the benefit you'll need to store ISecurityManager and SecurityManager in different .sol files. When you deploy new contracts that reference an existing on-chain SecurityManager, you won't need to deploy all of the SecurityManager contract's code with it; just only the interface. Not only is it unnecessary to re-deploy the SecurityManager implementation, doing so can significantly add to your deployment costs!  
+Aside from the usual design benefits that come with hiding implementations behind interfaces, there is a real practical reason for this as well; and to achieve the benefit you'll need to store ISecurityManager and SecurityManager in different .sol files. When you deploy new contracts that reference an existing on-chain SecurityManager, you won't need to deploy all of the SecurityManager contract's code with it; just only the interface. Not only is it unnecessary to re-deploy the SecurityManager implementation, doing so can significantly add to your deployment costs!  
 
 ```
 // this generalizes the interface of SecurityManager and hides its implementation
