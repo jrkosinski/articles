@@ -8,6 +8,8 @@
   <img src="unessential.png" />
 </p>
 
+[article](https://medium.com/@john.kosinski/security-manager-design-pattern-in-solidity-d8851779cb6d)
+
 Design patterns in software have been around a long time. Many have not changed much over the years (see Gang of Four) because they're based on fundamental building blocks of logic itself, and they're useful for most types of logical machines. When it comes to blockchain, some common long-held standards of development are infeasible or inadvisable (take the humble looping construct as a simple example). Some standard OOP design patterns are perfectly good and advisable in blockchain (smart contract) architecture, others usable with some modification; still others not at all. 
 
 Design patterns are just that - patterns of behavior in development that we may find in our own code, in the wild, or that we may dream up to solve a particular problem. Today I'd like to document a common pattern that I find myself using (and I'm sure that many others do too), because it solves a particular problem elegantly. 
