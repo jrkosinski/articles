@@ -60,6 +60,8 @@ Violates the R in the DRY principle, as you'll end up implementing similar or id
 
 ## Security Manager Implementation: 
 
+All code for this example is here: [view code on github](https://github.com/jrkosinski/articles/blob/main/security-manager/code/)
+
 ### Step 0: Naive Implementation
 
 [view code on github](https://github.com/jrkosinski/articles/blob/main/security-manager/code/discrete-steps/step0/Contract1.sol)
@@ -324,7 +326,7 @@ contract Contract2 is SecuredContract {
 }
 ```
 
-### Step 4: Finishing Touch: Hide SecurityManager Behind Interface
+### Step 4: Finishing Touches: Hide SecurityManager Behind Interface
 
 [view code on github](https://github.com/jrkosinski/articles/tree/main/security-manager/code/discrete-steps/step4)
 
@@ -359,12 +361,12 @@ contract Contract1 is SecuredContract {
     .... 
 ```
     
-### Step 5: Finishing Touch: Prevent Accidental Stranding
+### Step 5: Finishing Touches: Prevent Accidental Stranding
+
+[view code on github](https://github.com/jrkosinski/articles/tree/main/security-manager/code/discrete-steps/step5)
 
 - add code to SecurityManager.revokeRole to prevent stranding
 - add code to SecurityManager.renounceRole to prevent stranding
-
-[view code on github](https://github.com/jrkosinski/articles/tree/main/security-manager/code/discrete-steps/step5)
 
 When using role-based security, typically there is one role that's allowed to grant roles to accounts. If a contract was left without any users holding that one role (for example, if the one single admin accidentally revoked his own admin role), there could be no way for anyone to regain that role, short of redeploying the entire set of contracts. 
 
