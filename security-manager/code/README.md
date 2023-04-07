@@ -64,6 +64,8 @@ Violates the R in the DRY principle, as you'll end up implementing similar or id
 
 [view code on github](https://github.com/jrkosinski/articles/blob/main/security-manager/code/discrete-steps/step0/Contract1.sol)
 
+- implement one contract that controls its own security, via OpenZeppelin's AccessControl (role-based security)
+
 This exemplifies the naive implementation described above, wherein each contract individually handles its own security.
 
 ```
@@ -103,6 +105,9 @@ contract Contract is AccessControl {
 ### Step 1: Add Security Manager
 
 [view code on github](https://github.com/jrkosinski/articles/tree/main/security-manager/code/discrete-steps/step1)
+
+- implement a SecurityManager contract
+- modify the Contract to use a reference to SecurityManager instead of inheriting AccessControl
 
 Here, a SecurityManager contract is created (which controls access via OpenZeppelin's AccessControl), and Contract is changed so that it refers to an instance of the SecurityManager. See that SecurityManage provides the necessary access to the underlying security protocols, by allowing callers to query, revoke, renounce, and grant roles. 
 
@@ -183,6 +188,9 @@ contract Contract {
 
 [view code on github](https://github.com/jrkosinski/articles/tree/main/security-manager/code/discrete-steps/step2)
 
+- split Contract up into Contract1 and Contract2 
+- both contracts will continue to use SecurityManager 
+
 In a real use case, using this pattern with only one single contract is not really providing any benefit. The pattern is for cases in which security must be controlled for multiple contracts. Imagine a production scenario which might contain a handful or even dozens of contracts. This example, for simplicity, will just show two. 
 
 ```
@@ -242,6 +250,10 @@ contract Contract2 {
 ### Step 3: Simplify by Eliminating Redundancy
 
 [view code on github](https://github.com/jrkosinski/articles/tree/main/security-manager/code/discrete-steps/step3)
+
+- implement SecuredContract class
+- modify Contract1 and Contract2 to inherit SecuredContract
+- replace 'require' with a modifier 
 
 Now that we have two contracts, we see that there is some redundant code. For one thing, that 'require' in each of the restricted could be replaced by a more readable modifier. One way to do this is by creating a common class to hold the common code and making Contract1 and Contract2 subclasses. You can also use a library module or some other method if you prefer; the point here is just to tidy up and avoid repeating ourselves in code.
 
@@ -316,6 +328,10 @@ contract Contract2 is SecuredContract {
 
 [view code on github](https://github.com/jrkosinski/articles/tree/main/security-manager/code/discrete-steps/step4)
 
+- create ISecurityManager interface in a new file 
+- make SecurityManager implement ISecurityManager 
+- change all reference to SecurityManager in SecuredContract and Contract1/2 to ISecurityManager 
+
 We will create an interface called ISecurityManager, and make SeceurityManager implement it. 
 
 Aside from the usual benefits of hiding implementations behind interfaces, there is a real practical reason for this as well; and to achieve the benefit you'll need to store ISecurityManager and SecurityManager in different .sol files. When you deploy new contracts that reference an existing on-chain SecurityManager, you won't need to deploy all of the SecurityManager contract's code with it; just only the interface. Not only is it unnecessary to re-deploy the SecurityManager implementation, doing so can significantly add to your deployment costs!  
@@ -343,7 +359,10 @@ contract Contract1 is SecuredContract {
     .... 
 ```
     
-### Step 6: Finishing Touch: Prevent Accidental Stranding
+### Step 5: Finishing Touch: Prevent Accidental Stranding
+
+- add code to SecurityManager.revokeRole to prevent stranding
+- add code to SecurityManager.renounceRole to prevent stranding
 
 [view code on github](https://github.com/jrkosinski/articles/tree/main/security-manager/code/discrete-steps/step5)
 
@@ -367,6 +386,17 @@ In SecurityManager.sol:
         }
     }
 ```
+
+### Further Steps 
+
+[view code on github](https://github.com/jrkosinski/articles/tree/main/security-manager/code/contracts)
+
+In the code linked above, you can see that I've added some extra niceties. 
+- public method allows admin to change to a new SecurityManager (SecuredContract class, setSecurityManager) 
+- added extra checks when setting SecurityManager, in both the constructor and setSecurityManager method (e.g. zero address check)
+- comments 
+- custom errors 
+
 
 Some notes about the above example: 
 
