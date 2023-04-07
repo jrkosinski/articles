@@ -1,4 +1,8 @@
-# Security Manager Design Pattern in Solidity 
+
+
+<p align="center">
+  <h1>Security Manager Design Pattern in Solidity</h1>
+</p>
 
 <p align="center">
   <img src="unessential.png" />
