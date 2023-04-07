@@ -1,11 +1,13 @@
 # Security Manager Design Pattern in Solidity 
 
------------------------------------------------------------------------------------------------------------------------------------
 Thought of the day: Lots of people have ideas; the real skill is in turning those ideas into reality. 
+-----------------------------------------------------------------------------------------------------------------------------------
 
-Design Patterns. Gang of Four. Design patterns in software have been around a long time. Many have not changed at all over the years because they're based on fundamental logical building blocks, and they're useful for most types of logical machines. When it comes to blockchain, some common long-held standards of development are infeasible or inadvisable (take the humble looping construct as a simple example). Some standard OOP design patterns are perfectly good and advisable in blockchain (smart contract) architecture, others usable with some modification; still others not at all. 
+Design patterns in software have been around a long time. Many have not changed at all over the years because they're based on fundamental building blocks of logic, and they're useful for most types of logical machines. When it comes to blockchain, some common long-held standards of development are infeasible or inadvisable (take the humble looping construct as a simple example). Some standard OOP design patterns are perfectly good and advisable in blockchain (smart contract) architecture, others usable with some modification; still others not at all. 
 
-Today I'd like to introduce an example of a smart contract design pattern that relates to contract security. It's not specific to blockchain, but it is particularly applicable in smart contract development, and I'll explain why. It's not complicated, and it probably exists under many names, but I'm going to call it the Security Manager pattern. This pattern and the accompanying examples focus on Solidity development for any EVM compatible chain, but it can be applied (with applicable modifications) to other blockchain architectures as well. The examples and discourse focus on role-based security (because it's the most common use case), but one should be able to easily apply it just as well to other security models (e.g. governance-based security) 
+Design patterns are just that - patterns of behavior in development that we may find in our own code, in the wild, or that we may dream up to solve a problem. Today I'd like to document a common pattern that I and other seem to keep coming back to, because it solves a particular problem elegantly. 
+
+This pattern relates to contract security. It's not specific to blockchain, but it is particularly applicable in smart contract development, and I'll explain why. It's not complicated, and it probably exists under many names, but I'm going to call it the Security Manager pattern. This pattern and the accompanying examples focus on Solidity development for any EVM compatible chain, but it can be applied (with applicable modifications) to other blockchain architectures as well. The examples and discourse focus on role-based security (because it's the most common use case), but one should be able to easily apply it just as well to other security models (e.g. governance-based security) 
 
 This is the first in a planned multi-part series on Security Issues in Blockchain Development. 
 
@@ -407,14 +409,14 @@ Some notes about the above example:
 * I mentioned earlier that one of the side benefits is that it reduces the use of inheritance. Actually, inheritance is still used for SecurityManager, but that's (a) optional, and (b) only single inheritance. Inheritance is also used for SecuredContract -> Contract1 and Contract2, but that's optional; there are other ways to reduce code reuse (like libraries and such). 
 
 
-# Conclusion 
+## Conclusion 
 
-This has been an example of a design pattern that is suited well to use for EVM-compatible contract design - and smart contract design in general - for the reasons outlined above. 
+This has been an example of a design pattern that is suited well to use for EVM-compatible contract design - and smart contract design in general - for the reasons outlined above. The purpose of the pattern is to implement a security while increasing modularity and reuse, and decreasing code bloat. 
 
 See the pattern in the wild here: 
-# TODO: link to contracts 
+[https://bscscan.com/address/0x65aFe9D3cfE457271a78D86638F7834e2d4b11Fd#code](https://bscscan.com/address/0x65aFe9D3cfE457271a78D86638F7834e2d4b11Fd#code)
 
-# TODO: self-promotional link 
-
+Please check out my github if you're interested in discussing a project: 
+https://github.com/jrkosinski/Smart-Contract-Architect-Develeoper
 
 -----------------------------------------------------------------------------------------------------------------------------------
