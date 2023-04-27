@@ -76,6 +76,7 @@ class TrendData:
         series = list()
         prev_index = 0
         prev_price = start_price
+        nn = 0
         
         for i in range(self.length): 
             point = self.points[i]
@@ -85,11 +86,17 @@ class TrendData:
             if (index_diff > 1): 
                 for n in range(1, index_diff): 
                     series.append(0.5)
+                    #print(nn, ': 0.5')
+                    nn+= 1
                     
             if (price_diff < 0): 
+                #print(nn, ': 1')
                 series.append(1)
+                nn+= 1
             else: 
+                #print(nn, ': 0')
                 series.append(0)
+                nn+= 1
                     
             prev_price = point.price
             prev_index = point.index
@@ -191,4 +198,13 @@ def extract_trend(series: pd.Series, period: int):
                 data.append_point(new_hi, values[new_hi], 'hi')
         
         start_index = data.last_point.index
+        
+    #prepend hi or lo to 0th index
+    if (data.points[0].index != 0): 
+        data.points.insert(
+            0, 
+            TrendPoint(
+                0, values[0], 'hi' if data.points[0].point_type == 'lo' else 'hi'
+            )
+        )
     return data
