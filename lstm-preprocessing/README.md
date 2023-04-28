@@ -122,3 +122,5 @@ df.pop("Open")
 df.pop("High")
 df.pop("Low")
 ```
+
+## Detrending Price (Capture Change)
