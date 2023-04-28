@@ -1,15 +1,5 @@
 # Title
 
-[Part One](/part1/)
-[Part Two](/part2/)
+[Part One](part1/)
 
-
-
-
-part 1
-------
-title 
-intro 
-images 
-conclusion 
-
+[Part Two](part2/)
