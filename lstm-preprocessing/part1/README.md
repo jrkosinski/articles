@@ -15,7 +15,7 @@ the data to be used to train a keras LSTM model.
 
 This simplified example will consist of the following steps: 
 
-Part 1: 
+**Part 1:**
 
 1. Read the data 
 2. Extract the daily range (high - low) 
@@ -23,7 +23,7 @@ Part 1:
 4. Handle outliers 
 5. Scale the data 
 
-Part 2: 
+**Part 2:**
 
 7. Extract data about the trend, as a new column 
 8. Finally, shape the data into the correct shape to be used as input for a keras LSTM model
@@ -32,7 +32,7 @@ This article is available in jupyter notebook form, for both [part 1](https://gi
 
 [https://github.com/jrkosinski/articles/tree/main/lstm-preprocessing](https://github.com/jrkosinski/articles/tree/main/lstm-preprocessing)
 
-Prerequisites: 
+**Prerequisites:** 
 - python 3
 - scikit-learn 
 - pandas 
