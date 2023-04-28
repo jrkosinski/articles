@@ -220,8 +220,9 @@ well balanced).
 ```
 df['Change'].plot()
 ```
+![plot_pct_change](images/change/plot_pct_change.png)
 
-III.A.2: Function to Squash Outliers
+### Function to Squash Outliers
 
 I don't want to remove the rows that contain outliers, because that would be removing real data that we want 
 to give to the model. I don't 
@@ -250,6 +251,7 @@ Min and Max before squashing:
 print('MIN:', df['Change'].min())
 print('MAX:', df['Change'].max())
 ```
+![minmax change 1](images/outliers/minmax_change_1.png)
 
 ### Squash Outliers in Change
 ```
@@ -261,6 +263,7 @@ Min and Max after squashing:
 print(df['Change'].max())
 print(df['Change'].min())
 ```
+![minmax change 2](images/outliers/minmax_change_2.png)
 
 Now we can visually see in the plot of Change that there's a more balanced distribution of values, that will be 
 more healthy for the model to digest. Again, there is no formula for the perfect balance, and this is part 
@@ -270,6 +273,7 @@ closer to an ideal.
 ```
 df['Change'].plot()
 ```
+![plot change](images/outliers/plot_change.png)
 
 ### Squash Outliers in Range
 
@@ -282,6 +286,7 @@ That will cause the function to squash more on the top and less (or not at all, 
 ```
 df['Range'].plot()
 ```
+![plot range_before](images/ra/plotrange_1.png)
 
 ```
 df = squash_col_outliers(df, 'Range', min_quantile=0.0, max_quantile=0.97)
@@ -291,15 +296,15 @@ And now, we likewise see a more favorable distribution of values.
 
 ```
 df['Range'].plot()
-df.head()
 ```
+![plot range](images/outliers/plot_range.png)
+
+
+## Scaling
 
 Scaling input data between 0 and 1 is conventional when preparing inputs to LSTM or other types of 
 models. While not strictly necessary, and there are cases when it's not advised, it is considered good 
 practice. 
-'''
-
-## Scaling
 
 This function uses MinMaxScaler from scikitlearn package to fit the values of a given column between 0 and 1 
 (or any given values) and replaces the original column in the DataFrame with the new data. 
