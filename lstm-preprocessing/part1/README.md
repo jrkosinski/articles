@@ -53,7 +53,7 @@ At the end of the example, the data will have been transformed, with 3 scaled an
 training, evaluation, and testing sets. 
 
 In part one, this example will extract Range and Change from the timeseries data, remove the outliers, and scale the data between 0 and 1. 
-In [part two](part2/), the example will take the result of that, retrend the data, and shape it appropriately for input to a keras LSTM model.
+In [part two](../part2/), the example will take the result of that, retrend the data, and shape it appropriately for input to a keras LSTM model.
 
 ## Reading the Data 
 
