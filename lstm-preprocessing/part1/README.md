@@ -41,7 +41,7 @@ This article is available in jupyter notebook form, for both [part 1](https://gi
 Keras and tensorflow are not required for this example, as it's only about preprocessing the data prior to training a model; there is 
 no actual model involved in this example. 
 
-The data comes from Yahoo Finance historical data, and is availbale at 
+The data comes from Yahoo Finance historical data, and is available at 
 
 The data comes with the following columns: 
 - Open
