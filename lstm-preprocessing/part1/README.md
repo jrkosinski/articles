@@ -119,7 +119,7 @@ step.
 ```
 df['Range'].plot(kind='kde')
 ```
-![plot range](images/range/ramgedist.png)
+![plot range](images/range/rangedist.png)
 
 Now that we've extracted the daily range from the Open, High, and Low columns, we don't need those anymore, 
 so I'll just remove them. The information that we needed is now in the Range column. 
@@ -130,6 +130,7 @@ df.pop("Open")
 df.pop("High")
 df.pop("Low")
 ```
+![two cols](images/range/2cols.png)
 
 ## Detrending Price (Capture Change)
 
@@ -160,6 +161,7 @@ difficult for a model to extract generalizations from.
 ```
 df['Abs Change'].plot()
 ```
+![plot_abschange](images/change/plot_abschange.png)
 
 ### Percentage Change
 
@@ -173,6 +175,7 @@ df.pop("Abs Change")
 df['Change'] = df["Adj Close"].pct_change()
 df['Change'].plot()
 ```
+![plot_pct_change](images/change/plot_pct_change.png)
 
 Note that the very first value for the Pct Change column is a NaN. The reason is that to get this column, each 
 value in the source column was compared to its previous timestep, and the first record has no previous to which 
@@ -181,6 +184,7 @@ to compare.
 ```
 df.head()
 ```
+![nan](images/change/nan.png)
 
 The NaN can be removed reasonably by either basing the first change off of the Open 
 (instead of the previous step's Close), or just by simply removing the first row. I'll just remove the first row. 
