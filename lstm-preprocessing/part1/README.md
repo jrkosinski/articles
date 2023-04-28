@@ -28,6 +28,10 @@ Part 2:
 7. Extract data about the trend, as a new column 
 8. Finally, shape the data into the correct shape to be used as input for a keras LSTM model
 
+This article is available in jupyter notebook form, for both [part 1](https://github.com/jrkosinski/articles/tree/main/lstm-preprocessing/part1) and [part 2](https://github.com/jrkosinski/articles/tree/main/lstm-preprocessing/part2), here: 
+
+[https://github.com/jrkosinski/articles/tree/main/lstm-preprocessing](https://github.com/jrkosinski/articles/tree/main/lstm-preprocessing)
+
 Prerequisites: 
 - python 3
 - scikit-learn 
