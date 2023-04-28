@@ -64,12 +64,11 @@ exact data file that I used is here:
 
 ```
 df = pd.read_csv("data/prices-d.csv", index_col=0)
-df.head()
 ```
 ![data](images/1.png)
 
 The only column that we won't be touching at all is Volume, so I'll just remove that straightaway. 
-Also we don't need 'Close', as we'll use 'Adj Close' instead, as it's better for most purposes.
+Also we don't need 'Close', as we'll use 'Adj Close' instead, as the continuous series is better for most purposes.
 The other columns will be used to extract useful features, and then afterwards those source columns may be 
 discarded from the DataFrame. 
 
@@ -145,8 +144,8 @@ df.pop("Low")
 ### Absolute Change 
 
 A data series may exhibit trend, and it may exhibit seasonality. Multi-year stock price data is less likely to show 
-seasonality, but very likely to show a strong persistent trend. The problem with trended data (especially 
-financial asset data which tends to grow exponentially) is that it smashes early data into oblivion, making 
+seasonality, but very likely to show a strong persistent trend. The problem with trended data (especially inflation-affected
+financial asset data, which tends to grow exponentially with inflation) is that it smashes early data into oblivion, making 
 it nearly invisible to the model trying to generalize something from it. This is why absolute price is 
 almost never fed into a model without being heavily processed.
 
@@ -156,7 +155,6 @@ single line:
 
 ```
 df['Abs Change'] = df["Adj Close"].diff()
-df.head()
 ```
 
 But the main problem is evident when we plot this over time. We can see that as the price rose over the years, the 
@@ -183,16 +181,13 @@ df.pop("Abs Change")
 df['Change'] = df["Adj Close"].pct_change()
 df['Change'].plot()
 ```
-![plot_pct_change](images/change/plot_pct_change.png)
+![plot_pct_change](images/change/plot_pct_change.png) 
+
+![nan](images/change/nan.png)
 
 Note that the very first value for the Pct Change column is a NaN. The reason is that to get this column, each 
 value in the source column was compared to its previous timestep, and the first record has no previous to which 
-to compare. 
-
-```
-df.head()
-```
-![nan](images/change/nan.png)
+to compare.
 
 The NaN can be removed reasonably by either basing the first change off of the Open 
 (instead of the previous step's Close), or just by simply removing the first row. I'll just remove the first row. 
@@ -288,7 +283,7 @@ df['Change'].plot()
 The shape of the Range data is a bit different, so I'm going to do basically the same thing, but I'm going 
 to pass different values for the upper and lower limits, so that the left of the distribution will be less 
 affected by squashing, and the right of the distribution will be more affected (which is where it's needed). 
-I can do that by just passing lower values (lower than the default) for both min_quantile and max_quantile. 
+I can do that by just passing lower values (lower than the default) for both _min_quantile_ and _max_quantile_. 
 That will cause the function to squash more on the top and less (or not at all, in this case) on the bottom. 
 
 ```
@@ -300,7 +295,7 @@ df['Range'].plot()
 df = squash_col_outliers(df, 'Range', min_quantile=0.0, max_quantile=0.97)
 ```
 
-And now, we likewise see a more favorable distribution of values. 
+And now, we likewise see a more even distribution of values. 
 
 ```
 df['Range'].plot()
@@ -311,10 +306,10 @@ df['Range'].plot()
 ## Scaling
 
 Scaling input data between 0 and 1 is conventional when preparing inputs to LSTM or other types of 
-models. While not strictly necessary, and there are cases when it's not advised, it is considered good 
+models. While not strictly necessary, and there are cases in which it's not advisable, it is generally considered good 
 practice. 
 
-This function uses MinMaxScaler from scikitlearn package to fit the values of a given column between 0 and 1 
+This function uses MinMaxScaler from scikit-learn package to fit the values of a given column between 0 and 1 
 (or any given values) and replaces the original column in the DataFrame with the new data. 
 
 ```
