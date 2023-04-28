@@ -124,3 +124,219 @@ df.pop("Low")
 ```
 
 ## Detrending Price (Capture Change)
+
+### Absolute Change 
+
+A data series may have trend, and it may have seasonality. Multi-year stock price data is less likely to show 
+seasonality, but very likely to show a strong persistent trend. The problem with trended data (especially 
+financial asset data which tends to grow exponentially) is that it smashes early data into oblivion, making 
+it nearly invisible to the model trying to generalize something from it. This is why absolute price is 
+almost never fed into a model without being heavily processed.
+
+Now for the closing price ('Adj Close' column), again no one cares about the absolute price from day to day, 
+what one cares about is the change in price from day to day. Pandas lets us acheive that with the following 
+single line: 
+
+```
+df['Abs Change'] = df["Adj Close"].diff()
+df.head()
+```
+
+But the main problem is evident when we plot this over time. We can see that as the price rose over the years, the 
+average daily change also increased, naturally. This is not ideal data to feed into a model, because 
+(as you can see) earlier values will be de-emphasized to the point of nearly being ignored, whereas later 
+data points will be overemphasized in relation. Since we would like the model to be able to glean meaningful 
+data from the entire dataset, this is less than ideal. The plot below shows data that is likely to be 
+difficult for a model to extract generalizations from. 
+
+```
+df['Abs Change'].plot()
+```
+
+### Percentage Change
+
+Instead, the percentage change is what we want. It's less likely to be skewed or trended, and we can see this visually
+by plotting. 
+
+```
+#first remove Abs Change, as we don't need it 
+df.pop("Abs Change")
+
+df['Change'] = df["Adj Close"].pct_change()
+df['Change'].plot()
+```
+
+Note that the very first value for the Pct Change column is a NaN. The reason is that to get this column, each 
+value in the source column was compared to its previous timestep, and the first record has no previous to which 
+to compare. 
+
+```
+df.head()
+```
+
+The NaN can be removed reasonably by either basing the first change off of the Open 
+(instead of the previous step's Close), or just by simply removing the first row. I'll just remove the first row. 
+
+```
+print('len before:', len(df))
+df = df. tail(-1) 
+print('len after:', len(df))
+df.head()
+```
+
+## Outliers 
+
+The model is best able to extract generalizations from the data if most of the data falls within a normal 
+range. Outliers tend to skew the data such that some values (which may be important) will be almost ignored, 
+whereas others will be overemphasized. 
+
+Just to clarify I'm not talking here about outliers that may reflect mistakes in the data collection process 
+necessarily (bad data samples can often just be discarded), but simply events of unusual magnitude. For 
+example, price data that contains a swan event such as a major flash 
+crash that is many times larger than the normal daily move may de-emphasize the magnitude of all of the others 
+days' data. This can cause a model trained on data that contains the swan event to come up with very different results 
+compared to the same model trained on data that did not contain the event. That's not ideal, because it 
+indicates that something is interfering with the model's ability to generalize from the available data.
+
+Take another peek at the Change column before handling outliers. Note that just by visual inspection, it's 
+clear that most of the data falls into a very small percentage of the full range of values. That should be 
+corrected so that at least more than 50% of the data falls within more than 50% of the range (just ballpark 
+figures here, there is no real rule of thumb. It would depend on the goals of the data, and your idea of 
+what the ideal 'balance' of data is for your situation; but we can see that the data here is clearly not 
+well balanced). 
+
+```
+df['Change'].plot()
+```
+
+III.A.2: Function to Squash Outliers
+
+I don't want to remove the rows that contain outliers, because that would be removing real data that we want 
+to give to the model. I don't 
+want to zero the values either as that would skew the data in a different direction. Instead I would like to 
+'squash' the values to within a reasonable range, where outliers >=n will be treated the same as values 
+that are equal to n.
+
+```
+def squash_col_outliers(
+    df: pd.DataFrame, 
+    col_name: str, 
+    min_quantile: float =0.01, 
+    max_quantile:float =0.99
+): 
+    q_lo = df[col_name].quantile(min_quantile)
+    q_hi  = df[col_name].quantile(max_quantile)
+    
+    df.loc[df[col_name] >= q_hi, col_name] = q_hi
+    df.loc[df[col_name] <= q_lo, col_name] = q_lo
+    return df
+
+```
+
+Min and Max before squashing:
+```
+print('MIN:', df['Change'].min())
+print('MAX:', df['Change'].max())
+```
+
+### Squash Outliers in Change
+```
+df = squash_col_outliers(df, 'Change')
+```
+
+Min and Max after squashing:
+```
+print(df['Change'].max())
+print(df['Change'].min())
+```
+
+Now we can visually see in the plot of Change that there's a more balanced distribution of values, that will be 
+more healthy for the model to digest. Again, there is no formula for the perfect balance, and this is part 
+of a discovery process in which we'd like to get enough information to intuit a good enough rule, or what is 
+closer to an ideal. 
+
+```
+df['Change'].plot()
+```
+
+### Squash Outliers in Range
+
+The shape of the Range data is a bit different, so I'm going to do basically the same thing, but I'm going 
+to pass different values for the upper and lower limits, so that the left of the distribution will be less 
+affected by squashing, and the right of the distribution will be more affected (which is where it's needed). 
+I can do that by just passing lower values (lower than the default) for both min_quantile and max_quantile. 
+That will cause the function to squash more on the top and less (or not at all, in this case) on the bottom. 
+
+```
+df['Range'].plot()
+```
+
+```
+df = squash_col_outliers(df, 'Range', min_quantile=0.0, max_quantile=0.97)
+```
+
+And now, we likewise see a more favorable distribution of values. 
+
+```
+df['Range'].plot()
+df.head()
+```
+
+Scaling input data between 0 and 1 is conventional when preparing inputs to LSTM or other types of 
+models. While not strictly necessary, and there are cases when it's not advised, it is considered good 
+practice. 
+'''
+
+## Scaling
+
+This function uses MinMaxScaler from scikitlearn package to fit the values of a given column between 0 and 1 
+(or any given values) and replaces the original column in the DataFrame with the new data. 
+
+```
+def scale_col_values(
+    df: pd.DataFrame, 
+    col_name:str, 
+    min_value:float=0, 
+    max_value:float=1
+): 
+    values = df[col_name].values.reshape(-1, 1)
+    scaler = MinMaxScaler(feature_range=(min_value, max_value))
+    scaled_values = scaler.fit_transform(values)
+    df[col_name] = scaled_values.transpose()[0]
+    return df
+    
+```
+
+Check the min and max of the Change column before scaling. 
+
+```
+print(df['Change'].min())
+print(df['Change'].max())
+
+df = scale_col_values(df, 'Change')
+```
+
+Check that it's been changed by the scaling process. 
+```
+print(df['Change'].min())
+print(df['Change'].max())
+```
+
+And very importantly, note that the shape of the data has not changed, it's only been rescaled. The plot 
+from before looks the same as after, except for the scale of the y axis. 
+
+```
+df['Change'].plot()
+```
+
+Scaling of Range is exactly the same. 
+
+```
+df = scale_col_values(df, 'Range')
+```
+
+And likewise, the scale has been the only thing changed. 
+
+```
+df['Range'].plot()
+```
