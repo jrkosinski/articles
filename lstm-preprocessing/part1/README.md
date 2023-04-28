@@ -1,5 +1,8 @@
 # Preparing and Shaping Timeseries Data for Keras LSTM Input: Part One
 
+It's been said many times that the real key in machine learning is in how the data is processed, rather than in the model architecture. 
+Clearly both are important, but the importance of preprocessing the data may be sometimes underestimated. 
+
 In order to allow a model to learn as much as possible from a set of data, the important features of the data 
 need to be extracted and arranged in such a way that the model can use them to generalize relationships. 
 Often there is a long discovery process, in which the data is interrogated manually in order to intuit what 
