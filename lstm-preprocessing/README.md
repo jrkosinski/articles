@@ -43,3 +43,64 @@ At the end of the example, the data will have been transformed, with 3 scaled an
 
 ... and will be in the 3-dimensional array shape that a tensorflow LSTM model expects, split into 
 training, evaluation, and testing sets. 
+
+## Reading the Data 
+
+The data is read from a file downloaded from the free historical stock data at Yahoo Finance; the columns 
+are OHLC, plus Adjusted Close and Volume. Feel free to use any Yahoo historical stock price data, but the 
+exact data file that I used is here: 
+[https://github.com/jrkosinski/articles/blob/main/lstm-preprocessing/data/prices-d.csv](https://github.com/jrkosinski/articles/blob/main/lstm-preprocessing/data/prices-d.csv)
+
+```
+df = pd.read_csv("data/prices-d.csv", index_col=0)
+df.head()
+```
+
+The only column that we won't be touching at all is Volume, so I'll just remove that straightaway. 
+Also we don't need 'Close', as we'll use 'Adj Close' instead, as it's better for most purposes.
+The other columns will be used to extract useful features, and then afterwards those source columns may be 
+discarded from the DataFrame. 
+
+```
+df.pop("Volume")
+df.pop("Close")
+```
+
+### Capture the Range 
+
+The absolute values of the Open, High, and Low won't be useful to us. The daily range as a percentage of 
+something (the Open, or previous day's Close for example) could be useful though, so we should extract 
+what's useful, and get rid of what's not. 
+
+```
+df["Range"] = (df["High"] - df["Low"]) / df["Open"]
+```
+
+The single line of code above that extracts the daily range is possible thanks to the non-native Python 
+library pandas. In case you aren't accustomed to using pandas (and just to demonstrate what that line actually does) 
+it would be as if I had looped through the data and done this: 
+
+```
+df['Range'] = 0 #add new column 
+for i in range(len(df)): 
+    df['Range'][i] = (df["High"][i] - df["Low"][i]) / df["Open"][i]
+```
+
+Just to show what the Range column looks like, I will plot it. 
+
+```
+df['Range'].plot()
+```
+
+Just a few comments here; you can visually see a few things: 
+- there is no discernable strong trend 
+- the distribution is noticeably skewed right, with extreme positive outliers 
+- the range of the data is not neatly between 0 and 1
+
+The lack of trend is a good thing, we want that to feed into the model. The right-skew and the scale, we will 
+fix in later steps. If you like to get empirical, we can show the low trendiness of the series using augmented Dickey-Fuller or 
+some other metric. 
+
+```
+print('p-value: %f' % adfuller(df['Range'])[1])
+```
