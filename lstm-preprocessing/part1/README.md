@@ -363,3 +363,9 @@ And likewise, the scale has been the only thing changed.
 df['Range'].plot()
 ```
 ![plot_range](images/scaling/plot_range.png)
+
+
+## Conclusion of Part One
+So now the Range has been extracted and added to the dataset, the % daily Change has been extracted and added to the dataset, outliers in 
+both columns have been handled, and the data has been scaled. All other columns have been removed, except for Adj Close; this will be used in 
+[Part Two](../part2/) to re-extract trend data. 
