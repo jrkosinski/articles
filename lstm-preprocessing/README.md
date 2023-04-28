@@ -1,4 +1,4 @@
-# Title
+# Preparing and Shaping Timeseries Data for Keras LSTM Input
 
 [Part One](part1/)
 
