@@ -1,4 +1,4 @@
-# Introduction
+# Preparing and Shaping Timeseries Data for Keras LSTM Input: Part One
 
 In order to allow a model to learn as much as possible from a set of data, the important features of the data 
 usually must be extracted and arranged in such a way that the model can use them to generalize relationships. 
@@ -44,6 +44,9 @@ At the end of the example, the data will have been transformed, with 3 scaled an
 ... and will be in the 3-dimensional array shape that a tensorflow LSTM model expects, split into 
 training, evaluation, and testing sets. 
 
+In part one, this example will extract Range and Change from the timeseries data, remove the outliers, and scale the data between 0 and 1. 
+In [part two](part2/), the example will take the result of that, retrend the data, and shape it appropriately for input to a keras LSTM model.
+
 ## Reading the Data 
 
 The data is read from a file downloaded from the free historical stock data at Yahoo Finance; the columns 
@@ -55,6 +58,7 @@ exact data file that I used is here:
 df = pd.read_csv("data/prices-d.csv", index_col=0)
 df.head()
 ```
+
 
 The only column that we won't be touching at all is Volume, so I'll just remove that straightaway. 
 Also we don't need 'Close', as we'll use 'Adj Close' instead, as it's better for most purposes.
@@ -127,7 +131,7 @@ df.pop("Low")
 
 ### Absolute Change 
 
-A data series may have trend, and it may have seasonality. Multi-year stock price data is less likely to show 
+A data series may exhibit trend, and it may exhibit seasonality. Multi-year stock price data is less likely to show 
 seasonality, but very likely to show a strong persistent trend. The problem with trended data (especially 
 financial asset data which tends to grow exponentially) is that it smashes early data into oblivion, making 
 it nearly invisible to the model trying to generalize something from it. This is why absolute price is 
