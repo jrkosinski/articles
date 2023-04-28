@@ -79,6 +79,7 @@ what's useful, and get rid of what's not.
 ```
 df["Range"] = (df["High"] - df["Low"]) / df["Open"]
 ```
+![plot range](images/range/range_added.png)
 
 The single line of code above that extracts the daily range is possible thanks to the non-native Python 
 library pandas. In case you aren't accustomed to using pandas (and just to demonstrate what that line actually does) 
@@ -95,7 +96,7 @@ Just to show what the Range column looks like, I will plot it.
 ```
 df['Range'].plot()
 ```
-![plot range](images/plotrange_1.png)
+![plot range](images/range/plotrange_1.png)
 
 Just a few comments here; you can visually see a few things: 
 - there is no discernable strong trend 
@@ -109,6 +110,7 @@ some other metric.
 ```
 print('p-value: %f' % adfuller(df['Range'])[1])
 ```
+![plot range](images/range/pvalue.png)
 
 Here I've plotted the distribution to better show the skewness of the data, though you can see it plainly 
 enough in the previous plot. Removing outliers should make the data more balanced, so I will do that in a later 
@@ -117,6 +119,7 @@ step.
 ```
 df['Range'].plot(kind='kde')
 ```
+![plot range](images/range/ramgedist.png)
 
 Now that we've extracted the daily range from the Open, High, and Low columns, we don't need those anymore, 
 so I'll just remove them. The information that we needed is now in the Range column. 
