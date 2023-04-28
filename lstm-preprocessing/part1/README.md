@@ -286,7 +286,7 @@ That will cause the function to squash more on the top and less (or not at all, 
 ```
 df['Range'].plot()
 ```
-![plot range_before](images/ra/plotrange_1.png)
+![plot range_before](images/range/plotrange_1.png)
 
 ```
 df = squash_col_outliers(df, 'Range', min_quantile=0.0, max_quantile=0.97)
@@ -329,7 +329,10 @@ Check the min and max of the Change column before scaling.
 ```
 print(df['Change'].min())
 print(df['Change'].max())
+```
+![minmax_change](images/scaling/minmax_change_1.png)
 
+```
 df = scale_col_values(df, 'Change')
 ```
 
@@ -338,6 +341,7 @@ Check that it's been changed by the scaling process.
 print(df['Change'].min())
 print(df['Change'].max())
 ```
+![minmax_change](images/scaling/minmax_change_2.png)
 
 And very importantly, note that the shape of the data has not changed, it's only been rescaled. The plot 
 from before looks the same as after, except for the scale of the y axis. 
@@ -345,6 +349,7 @@ from before looks the same as after, except for the scale of the y axis.
 ```
 df['Change'].plot()
 ```
+![plot_change](images/scaling/plot_change.png)
 
 Scaling of Range is exactly the same. 
 
@@ -357,3 +362,4 @@ And likewise, the scale has been the only thing changed.
 ```
 df['Range'].plot()
 ```
+![plot_range](images/scaling/plot_range.png)
