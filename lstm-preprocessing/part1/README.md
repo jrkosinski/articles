@@ -58,7 +58,7 @@ exact data file that I used is here:
 df = pd.read_csv("data/prices-d.csv", index_col=0)
 df.head()
 ```
-
+![data](images/1.png)
 
 The only column that we won't be touching at all is Volume, so I'll just remove that straightaway. 
 Also we don't need 'Close', as we'll use 'Adj Close' instead, as it's better for most purposes.
@@ -95,6 +95,7 @@ Just to show what the Range column looks like, I will plot it.
 ```
 df['Range'].plot()
 ```
+![plot range](images/plotrange_1.png)
 
 Just a few comments here; you can visually see a few things: 
 - there is no discernable strong trend 
