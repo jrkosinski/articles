@@ -66,7 +66,7 @@ df.pop("Volume")
 df.pop("Close")
 ```
 
-### Capture the Range 
+## Capture the Range 
 
 The absolute values of the Open, High, and Low won't be useful to us. The daily range as a percentage of 
 something (the Open, or previous day's Close for example) could be useful though, so we should extract 
@@ -103,4 +103,22 @@ some other metric.
 
 ```
 print('p-value: %f' % adfuller(df['Range'])[1])
+```
+
+Here I've plotted the distribution to better show the skewness of the data, though you can see it plainly 
+enough in the previous plot. Removing outliers should make the data more balanced, so I will do that in a later 
+step. 
+
+```
+df['Range'].plot(kind='kde')
+```
+
+Now that we've extracted the daily range from the Open, High, and Low columns, we don't need those anymore, 
+so I'll just remove them. The information that we needed is now in the Range column. 
+
+```
+# remove extra columns 
+df.pop("Open")
+df.pop("High")
+df.pop("Low")
 ```
