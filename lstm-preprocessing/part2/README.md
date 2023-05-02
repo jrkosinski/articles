@@ -142,7 +142,7 @@ To simplify, first create an array of 3-element arrays, where each element of th
 
 The function to get the X values from the data set, shaped correctly as a 3-dimensional array in the form (samples, timesteps, features):
 
-![image](https://github.com/jrkosinski/articles/blob/main/lstm-preprocessing/part2/images/retrend/xy2.png)
+![image](https://github.com/jrkosinski/articles/blob/main/lstm-preprocessing/part2/images/shape/xy2.png)
 
 There are missing values, because in the beginning two records, there is a lack of previous data for t-2, and t-1, and at the end it's impossible to make a prediction because we don't have the future y value; this is expected. If we remove those missing-data rows then we are left with:
 
