@@ -69,8 +69,11 @@ for i in range(3):
 ```
 
 ![image](https://github.com/jrkosinski/articles/blob/main/lstm-preprocessing/part2/images/retrend/trendlines2.png)
+
 ![image](https://github.com/jrkosinski/articles/blob/main/lstm-preprocessing/part2/images/retrend/trendpoints2.png)
+
 ![image](https://github.com/jrkosinski/articles/blob/main/lstm-preprocessing/part2/images/retrend/trendlines3.png)
+
 ![image](https://github.com/jrkosinski/articles/blob/main/lstm-preprocessing/part2/images/retrend/trendpoints3.png)
 
 Then this data will be added as a new column to the DataFrame, called 'Trend'. Note that the data is already normalized between 0 and 1, so it doesn't require scaling. And there's no need to handle outliers, because there are none.
@@ -84,7 +87,7 @@ print(len(trend.as_boolean(df['Adj Close'][0])))
 df.pop("Adj Close")
 df.head()
 ```
-![image]()
+![image](https://github.com/jrkosinski/articles/blob/main/lstm-preprocessing/part2/images/retrend/trendcol.png)
 
 ## Shaping the Data
 
@@ -125,7 +128,8 @@ _df1['f2'] = ['r0f2', 'r1f2', 'r2f2', 'r3f2', 'r4f2', 'r5f2', 'r6f2', 'r7f2', 'r
 _df1.head(9)
 ```
 
-![image]()
+![image](https://github.com/jrkosinski/articles/blob/main/lstm-preprocessing/part2/images/shape/table1.png)
+
 So the outermost dimension of the 3-dimensional input array will have 10 elements. Each of those elements will be an array, so let's create this to begin with:
 
 [ [] [] [] [] [] [] [] [] [] [] ]
@@ -138,11 +142,11 @@ To simplify, first create an array of 3-element arrays, where each element of th
 
 The function to get the X values from the data set, shaped correctly as a 3-dimensional array in the form (samples, timesteps, features):
 
-![image]()
+![image](https://github.com/jrkosinski/articles/blob/main/lstm-preprocessing/part2/images/retrend/xy2.png)
 
 There are missing values, because in the beginning two records, there is a lack of previous data for t-2, and t-1, and at the end it's impossible to make a prediction because we don't have the future y value; this is expected. If we remove those missing-data rows then we are left with:
 
-![image]()
+![image](https://github.com/jrkosinski/articles/blob/main/lstm-preprocessing/part2/images/shape/xy3.png)
 
 This function will do the necessary shaping and transforming for X, and will output X shifted and shaped correctly as a 3-dimensional array:
 
@@ -194,7 +198,7 @@ def extract_y(df: pd.DataFrame, col_name: str, ntimesteps: int):
  
  Replace each day (row) with an array containing the two features of that day (row). So d0 becomes the two-element array [r0f1, r0f2].
  
-![image]()
+![image](https://github.com/jrkosinski/articles/blob/main/lstm-preprocessing/part2/images/shape/rofl1.png)
  
  And the three lines to call these methods on the dataset, to get X and y values:
  
@@ -208,7 +212,7 @@ The row numbers are sequential in each column going from top to bottom, and ordi
 
 Now the y values are just a scalar array of feature 2 from each row, but shifted back 1.
 
-![image]()
+![image](https://github.com/jrkosinski/articles/blob/main/lstm-preprocessing/part2/images/shape/rofl2.png)
 
 ```
 class DataSet:
