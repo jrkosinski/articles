@@ -93,7 +93,7 @@ what's useful, and get rid of what's not.
 ```
 df["Range"] = (df["High"] - df["Low"]) / df["Open"]
 ```
-![plot range](images/range/range_added.png)
+![plot range](https://github.com/jrkosinski/articles/blob/main/lstm-preprocessing/part1/images/range/range_added.png)
 
 The single line of code above that extracts the daily range is possible thanks to the non-native Python 
 library pandas. In case you aren't accustomed to using pandas (and just to demonstrate what that line actually does) 
@@ -110,7 +110,7 @@ Just to show what the Range column looks like, I will plot it.
 ```
 df['Range'].plot()
 ```
-![plot range](images/range/plotrange_1.png)
+![plot range](https://github.com/jrkosinski/articles/blob/main/lstm-preprocessing/part1/images/range/plotrange_1.png)
 
 Just a few comments here; you can visually see a few things: 
 - there is no discernable strong trend 
@@ -124,7 +124,7 @@ some other metric.
 ```
 print('p-value: %f' % adfuller(df['Range'])[1])
 ```
-![plot range](images/range/pvalue.png)
+![plot range](https://github.com/jrkosinski/articles/blob/main/lstm-preprocessing/part1/images/range/pvalue.png)
 
 Here I've plotted the distribution to better show the skewness of the data, though you can see it plainly 
 enough in the previous plot. Removing outliers should make the data more balanced, so I will do that in a later 
@@ -133,7 +133,7 @@ step.
 ```
 df['Range'].plot(kind='kde')
 ```
-![plot range](images/range/rangedist.png)
+![plot range](https://github.com/jrkosinski/articles/blob/main/lstm-preprocessing/part1/images/range/rangedist.png)
 
 Now that we've extracted the daily range from the Open, High, and Low columns, we don't need those anymore, 
 so I'll just remove them. The information that we needed is now in the Range column. 
@@ -144,7 +144,7 @@ df.pop("Open")
 df.pop("High")
 df.pop("Low")
 ```
-![two cols](images/range/2cols.png)
+![two cols](https://github.com/jrkosinski/articles/blob/main/lstm-preprocessing/part1/images/range/2cols.png)
 
 ## Detrending Price (Capture Change)
 
@@ -174,7 +174,7 @@ difficult for a model to extract generalizations from.
 ```
 df['Abs Change'].plot()
 ```
-![plot_abschange](images/change/plot_abschange.png)
+![plot_abschange](https://github.com/jrkosinski/articles/blob/main/lstm-preprocessing/part1/images/change/plot_abschange.png)
 
 ### Percentage Change
 
@@ -188,9 +188,9 @@ df.pop("Abs Change")
 df['Change'] = df["Adj Close"].pct_change()
 df['Change'].plot()
 ```
-![plot_pct_change](images/change/plot_pct_change.png) 
+![plot_pct_change](https://github.com/jrkosinski/articles/blob/main/lstm-preprocessing/part1/images/change/plot_pct_change.png) 
 
-![nan](images/change/nan.png)
+![nan](https://github.com/jrkosinski/articles/blob/main/lstm-preprocessing/part1/images/change/nan.png)
 
 Note that the very first value for the Pct Change column is a NaN. The reason is that to get this column, each 
 value in the source column was compared to its previous timestep, and the first record has no previous to which 
@@ -230,7 +230,7 @@ well balanced).
 ```
 df['Change'].plot()
 ```
-![plot_pct_change](images/change/plot_pct_change.png)
+![plot_pct_change](https://github.com/jrkosinski/articles/blob/main/lstm-preprocessing/part1/images/change/plot_pct_change.png)
 
 ### Function to Squash Outliers
 
@@ -261,7 +261,7 @@ Min and Max before squashing:
 print('MIN:', df['Change'].min())
 print('MAX:', df['Change'].max())
 ```
-![minmax change 1](images/outliers/minmax_change_1.png)
+![minmax change 1](https://github.com/jrkosinski/articles/blob/main/lstm-preprocessing/part1/images/outliers/minmax_change_1.png)
 
 ### Squash Outliers in Change
 ```
@@ -273,7 +273,7 @@ Min and Max after squashing:
 print(df['Change'].max())
 print(df['Change'].min())
 ```
-![minmax change 2](images/outliers/minmax_change_2.png)
+![minmax change 2](https://github.com/jrkosinski/articles/blob/main/lstm-preprocessing/part1/images/outliers/minmax_change_2.png)
 
 Now we can visually see in the plot of Change that there's a more balanced distribution of values, that will be 
 more healthy for the model to digest. Again, there is no formula for the perfect balance, and this is part 
@@ -283,7 +283,7 @@ closer to an ideal.
 ```
 df['Change'].plot()
 ```
-![plot change](images/outliers/plot_change.png)
+![plot change](https://github.com/jrkosinski/articles/blob/main/lstm-preprocessing/part1/images/outliers/plot_change.png)
 
 ### Squash Outliers in Range
 
@@ -296,7 +296,7 @@ That will cause the function to squash more on the top and less (or not at all, 
 ```
 df['Range'].plot()
 ```
-![plot range_before](images/range/plotrange_1.png)
+![plot range_before](https://github.com/jrkosinski/articles/blob/main/lstm-preprocessing/part1/images/range/plotrange_1.png)
 
 ```
 df = squash_col_outliers(df, 'Range', min_quantile=0.0, max_quantile=0.97)
@@ -307,7 +307,7 @@ And now, we likewise see a more even distribution of values.
 ```
 df['Range'].plot()
 ```
-![plot range](images/outliers/plot_range.png)
+![plot range](https://github.com/jrkosinski/articles/blob/main/lstm-preprocessing/part1/images/outliers/plot_range.png)
 
 
 ## Scaling
@@ -340,7 +340,7 @@ Check the min and max of the Change column before scaling.
 print(df['Change'].min())
 print(df['Change'].max())
 ```
-![minmax_change](images/scaling/minmax_change_1.png)
+![minmax_change](https://github.com/jrkosinski/articles/blob/main/lstm-preprocessing/part1/images/scaling/minmax_change_1.png)
 
 ```
 df = scale_col_values(df, 'Change')
@@ -351,7 +351,7 @@ Check that it's been changed by the scaling process.
 print(df['Change'].min())
 print(df['Change'].max())
 ```
-![minmax_change](images/scaling/minmax_change_2.png)
+![minmax_change](https://github.com/jrkosinski/articles/blob/main/lstm-preprocessing/part1/images/scaling/minmax_change_2.png)
 
 And very importantly, note that the shape of the data has not changed, it's only been rescaled. The plot 
 from before looks the same as after, except for the scale of the y axis. 
@@ -359,7 +359,7 @@ from before looks the same as after, except for the scale of the y axis.
 ```
 df['Change'].plot()
 ```
-![plot_change](images/scaling/plot_change.png)
+![plot_change](https://github.com/jrkosinski/articles/blob/main/lstm-preprocessing/part1/images/scaling/plot_change.png)
 
 Scaling of Range is exactly the same. 
 
@@ -372,10 +372,10 @@ And likewise, the scale has been the only thing changed.
 ```
 df['Range'].plot()
 ```
-![plot_range](images/scaling/plot_range.png)
+![plot_range](https://github.com/jrkosinski/articles/blob/main/lstm-preprocessing/part1/images/scaling/plot_range.png)
 
 
 ## Conclusion of Part One
 So now the Range has been extracted and added to the dataset, the % daily Change has been extracted and added to the dataset, outliers in 
 both columns have been handled, and the data has been scaled. All other columns have been removed, except for Adj Close; this will be used in 
-[Part Two](../part2/) to re-extract trend data. 
+[Part Two](https://github.com/jrkosinski/articles/blob/main/lstm-preprocessing/part2/) to re-extract trend data. 
