@@ -72,7 +72,7 @@ exact data file that I used is here:
 ```
 df = pd.read_csv("data/prices-d.csv", index_col=0)
 ```
-![data](images/1.png)
+![data](https://github.com/jrkosinski/articles/blob/main/lstm-preprocessing/part1/images/1.png)
 
 The only column that we won't be touching at all is Volume, so I'll just remove that straightaway. 
 Also we don't need 'Close', as we'll use 'Adj Close' instead, as the continuous series is better for most purposes.
