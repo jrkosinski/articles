@@ -148,6 +148,16 @@ There are missing values, because in the beginning two records, there is a lack 
 
 ![image](https://github.com/jrkosinski/articles/blob/main/lstm-preprocessing/part2/images/shape/xy3.png)
 
+To explain it in another way, each sample will contain all features from multiple data points, and some of the data from sample n+1 is going to overlap that of sample n. 
+
+Sample s0 will contain data from timesteps t0–t2 (so t0, t1, and t2). 
+
+Sample s1 will contain data from timestep t1–t3 (t1, t2, t3) 
+
+Sample s2 will contain data from timestep t2–t4 (t2, t3, t4)
+
+And that's assuming a lag of 3, which we're using as a convenient example. With a lag of 4, s0 would contain t0-t3, s1 would contain t1–t4, and so on.
+
 This function will do the necessary shaping and transforming for X, and will output X shifted and shaped correctly as a 3-dimensional array:
 
 ```
