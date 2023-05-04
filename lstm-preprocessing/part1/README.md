@@ -1,8 +1,8 @@
 # Preparing and Shaping Timeseries Data for Keras LSTM Input: Part One
 
-It’s often said that successful machine learning comes more from how the data is processed, than the model architecture. Clearly both are important, but the importance of pre-processing the data might be sometimes underestimated.
+It’s often said that successful machine learning comes more from how the data is processed, than from the model architecture. Clearly both are important, but the importance of pre-processing the data might be sometimes underestimated.
 
-In order to allow a model to learn as much as possible from a set of data, the important features of the data need to be extracted and arranged in such a way that the model can use them to generalize relationships. Often there is a long discovery process, in which the data is interrogated manually in order to intuit what features to extract and how to present them. Training the model is usually one of the last steps in a lengthy process.
+In order to allow a model to learn as much as possible from a set of data, the important features of the data need to be extracted and arranged in such a way that the model can use them to generalize relationships. Often there is a long discovery process, in which the data is interrogated manually in order to determine or intuit what features to extract and how to present them. Training the model is usually one of the last steps in a lengthy process.
 
 In this example I'm going to focus on price series data, for example a multi-year daily stock price time series, 
 and I'm going to demonstrate an example of preprocessing the data to extract a few features, in order to prepare
