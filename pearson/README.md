@@ -251,7 +251,7 @@ series1, series2 = offset_series(100, h_offset = -3)
 plot_series(series1, series2)
 ```
 
-![figure 10](https://github.com/jrkosinski/articles/blob/main/pearson/images/offset.png)
+![figure 10](https://github.com/jrkosinski/articles/blob/main/pearson/images/hoffset.png)
 
 _R_ isn't noticeably different from that of two random series, even though the horizontal offset is only one. 
 ```show_series_correlation(series1, series2)```
