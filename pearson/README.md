@@ -78,6 +78,32 @@ series_len = 100000
 for i in range (20): 
     show_series_correlation(random_series(series_len), random_series(series_len))
 ```
+![figure 1](https://github.com/jrkosinski/articles/blob/main/pearson/images/nearzero.png)
 
+And as stated, two exactly identical arrays should show an _R_ of exactly 1. 
+To demonstrate:
+```
+series1 = random_series(100)
+series2 = series1
+
+# this should be 1.0
+show_series_correlation(series1, series2)
+```
+![figure 1](https://github.com/jrkosinski/articles/blob/main/pearson/images/R1.png)
+
+To demonstrate perfect negative correlation, first create a random series, then create a copy 
+which is an inverse of the first. 
 
 ```
+def mirrored_series(length: int): 
+    '''Creates a randomized series of the given length with random values between 0 and 1, and a mirror image 
+    of that series with a perfect inverse correlation to the first, and values between 0 and -1.
+    Returns: tuple (pandas.Series, pandas.Series)'''
+    s1 = random_series(length)
+    s2 = s1 * -1
+    return s1, s2
+    
+series1, series2 = mirrored_series(100)
+plot_series(series1, series2)
+```
+![figure 1](https://github.com/jrkosinski/articles/blob/main/pearson/images/mirror.png)
