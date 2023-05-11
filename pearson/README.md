@@ -26,7 +26,7 @@ Pearson's Correlation is named after early 20th century mathematician Karl Pears
 [IMAGE of PEARSON]
 
 
-## What is the Pearson measure good for? 
+## What is the Pearson Coefficient Good For? 
 
 The Pearson correlation is used to help answer the question: are the variables X and Y correlated, to what extent, 
 and is that correlation negative or positive? The value can be used to pre-select certain features for further 
@@ -146,7 +146,7 @@ series1, series2 = correlated_series(100, .3)
 plot_series(series1, series2)
 ```
 
-![figure 5](https://github.com/jrkosinski/articles/blob/main/pearson/images/hoffset.png)
+![figure 5](https://github.com/jrkosinski/articles/blob/main/pearson/images/correlated.png)
 
 As the variance (the amount by which the values of the series are jiggled to make them unequal) increases, 
 it should be expected that the _R_ for the two series will drop accordingly. See: 
@@ -185,6 +185,7 @@ And though the values of the two series are far apart from one another, expect t
 to 1.
 
 ```show_series_correlation(series1, series2)```
+
 ![figure 8](https://github.com/jrkosinski/articles/blob/main/pearson/images/Rvlag.png)
 
 It should be so with negative correlation as well. 
