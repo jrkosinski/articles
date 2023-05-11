@@ -28,4 +28,4 @@ Pearson's Correlation is named after early 20th century mathematician Karl Pears
 
 ### What is Pearson's Coefficient Used For? 
 
-Pearson's correlation is used to help answer the question: are the variables X and Y correlated, to what extent, and is that correlation negative or positive? The value can be used to pre-select certain features for further processing or use in a machine learning algorithm. 
+Pearson's correlation is used to help answer the question: are the variables X and Y correlated, to what extent, and is that correlation negative or positive? The value can be used to pre-select certain features for further processing or for use in a machine learning algorithm. 
