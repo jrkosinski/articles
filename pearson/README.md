@@ -23,7 +23,7 @@ X=[3,2,1] and Y=[1,2,3] should have $\rho =  -1$, as they're perfectly negativel
 
 Pearson's Correlation is named after early 20th century mathematician Karl Pearson, or possibly after the cook from RDR2. 
 
-[IMAGE of PEARSON]
+![pearson](https://github.com/jrkosinski/articles/blob/main/pearson/images/pearson.png)
 
 
 ## What is the Pearson Coefficient Good For? 
